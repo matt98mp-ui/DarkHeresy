@@ -1201,7 +1201,66 @@ body[data-theme="grimdark"] .section > h2{
   }
 }
 
+
 </style>
+
+<script>
+/* =============================
+   Theme system (v9)
+   ============================= */
+(function(){
+  const KEY = "icc_theme";
+  const DEFAULT_THEME = "inquisition";
+  const root = document.documentElement;
+
+  function applyTheme(theme){
+    const t = theme || DEFAULT_THEME;
+    root.setAttribute("data-theme", t);
+    // Update meta theme-color for installed PWA
+    const meta = document.querySelector('meta[name="theme-color"]');
+    const colors = {
+      inquisition: "#0b0d10",
+      hive: "#0b0a08",
+      mechanicus: "#120707",
+      voidship: "#070b12",
+      parchment: "#f7f1e3"
+    };
+    if (meta && colors[t]) meta.setAttribute("content", colors[t]);
+  }
+
+  function loadTheme(){
+    const stored = localStorage.getItem(KEY);
+    applyTheme(stored || DEFAULT_THEME);
+    const sel = document.getElementById("themeSelect");
+    if (sel) sel.value = stored || DEFAULT_THEME;
+  }
+
+  window.__ICC_THEME__ = { applyTheme, loadTheme };
+
+  document.addEventListener("DOMContentLoaded", () => {
+    loadTheme();
+
+    const themeSel = document.getElementById("themeSelect");
+    if (themeSel){
+      themeSel.addEventListener("change", (e) => {
+        const t = e.target.value;
+        localStorage.setItem(KEY, t);
+        applyTheme(t);
+      });
+    }
+
+    const resetBtn = document.getElementById("themeResetBtn");
+    if (resetBtn){
+      resetBtn.addEventListener("click", () => {
+        localStorage.removeItem(KEY);
+        applyTheme(DEFAULT_THEME);
+        if (themeSel) themeSel.value = DEFAULT_THEME;
+      });
+    }
+  });
+})()
+</script>
+
 <link href="manifest.json" rel="manifest"/>
 <meta content="#1a0000" name="theme-color"/>
 <script defer="True" src="data/talents.js"></script>
@@ -1980,60 +2039,8 @@ button:disabled, .btn:disabled{
   filter: saturate(.6);
 }
 
-/* =============================
-   Theme system (v9)
-   ============================= */
-(function(){
-  const KEY = "icc_theme";
-  const DEFAULT_THEME = "inquisition";
-  const root = document.documentElement;
 
-  function applyTheme(theme){
-    const t = theme || DEFAULT_THEME;
-    root.setAttribute("data-theme", t);
-    // Update meta theme-color for installed PWA
-    const meta = document.querySelector('meta[name="theme-color"]');
-    const colors = {
-      inquisition: "#0b0d10",
-      hive: "#0b0a08",
-      mechanicus: "#120707",
-      voidship: "#070b12",
-      parchment: "#f7f1e3"
-    };
-    if (meta && colors[t]) meta.setAttribute("content", colors[t]);
-  }
-
-  function loadTheme(){
-    const stored = localStorage.getItem(KEY);
-    applyTheme(stored || DEFAULT_THEME);
-    const sel = document.getElementById("themeSelect");
-    if (sel) sel.value = stored || DEFAULT_THEME;
-  }
-
-  window.__ICC_THEME__ = { applyTheme, loadTheme };
-
-  document.addEventListener("DOMContentLoaded", () => {
-    loadTheme();
-
-    const themeSel = document.getElementById("themeSelect");
-    if (themeSel){
-      themeSel.addEventListener("change", (e) => {
-        const t = e.target.value;
-        localStorage.setItem(KEY, t);
-        applyTheme(t);
-      });
-    }
-
-    const resetBtn = document.getElementById("themeResetBtn");
-    if (resetBtn){
-      resetBtn.addEventListener("click", () => {
-        localStorage.removeItem(KEY);
-        applyTheme(DEFAULT_THEME);
-        if (themeSel) themeSel.value = DEFAULT_THEME;
-      });
-    }
-  });
-})();
+;
 
 /* =============================
    v43 Ability Breakdown (5e)
