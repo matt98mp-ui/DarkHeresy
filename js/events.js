@@ -489,8 +489,6 @@ export function initEvents() {
       try { localStorage.setItem("dh_density", v); } catch {}
     });
   }
-    });
-  }
 
 
   // iOS-friendly Career/Homeworld selects with Other… fallback
