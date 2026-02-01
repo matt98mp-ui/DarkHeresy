@@ -72,12 +72,12 @@ export function initEvents() {
 
   // Glance (editable header) bindings
   const bind = (id, fn, isNumber=false) => {
-    const el = el(id);
-    if (!el || el.dataset.bound) return;
-    el.dataset.bound = "1";
-    el.addEventListener("input", () => {
+    const node = el(id);
+    if (!node || node.dataset.bound) return;
+    node.dataset.bound = "1";
+    node.addEventListener("input", () => {
       snapshot();
-      const v = isNumber ? Number(el.value || 0) : el.value;
+      const v = isNumber ? Number(node.value || 0) : node.value;
       fn(v);
       scheduleAutosave();
       updateUndoRedoUI?.();
@@ -599,10 +599,10 @@ el("browserSearch")?.addEventListener("input", (e) => {
   
   // Ability score inputs → recompute mods/saves
   ["str","dex","con","int","wis","cha"].forEach((id) => {
-    const el = el(id);
-    if (!el || el.dataset.boundAbil) return;
-    el.dataset.boundAbil = "1";
-    el.addEventListener("input", () => {
+    const node = el(id);
+    if (!node || node.dataset.boundAbil) return;
+    node.dataset.boundAbil = "1";
+    node.addEventListener("input", () => {
       snapshot();
       syncAbilitiesToStateAndUI();
       renderAll();

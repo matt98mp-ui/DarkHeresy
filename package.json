@@ -6,8 +6,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint .",
-    "check": "node tools/check.js",
-    "test:smoke": "node tools/smoke.mjs"
+    "check": "node tools/check-syntax.mjs",
+    "check:syntax": "node tools/check-syntax.mjs"
   },
   "devDependencies": {
     "eslint": "^8.57.0",
