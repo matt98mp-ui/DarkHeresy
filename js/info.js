@@ -1,4 +1,5 @@
 import { state } from "./state.js";
+import { el, qs, qsa } from "./dom.js";
 
 function esc(s) {
   return String(s ?? "").replace(/[&<>"]/g, (c) => ({
@@ -59,8 +60,8 @@ function renderActions(item) {
 }
 
 export function showInfoForSelected() {
-  const modal = document.getElementById("infoModal");
-  const body = document.getElementById("infoBody");
+  const modal = el("infoModal");
+  const body = el("infoBody");
   if (!modal || !body) return;
 
   const item = state.selectedInfo;
@@ -71,7 +72,7 @@ export function showInfoForSelected() {
 }
 
 export function closeInfo() {
-  const modal = document.getElementById("infoModal");
+  const modal = el("infoModal");
   if (modal) modal.style.display = "none";
   state.infoOpen = false;
 }

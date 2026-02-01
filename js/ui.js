@@ -1,5 +1,6 @@
 import { state } from "./state.js";
 import { showInfoForSelected } from "./info.js";
+import { el, qs, qsa } from "./dom.js";
 
 function esc(s) {
   return String(s ?? "").replace(/[&<>"]/g, (c) => ({
@@ -8,7 +9,7 @@ function esc(s) {
 }
 
 export function renderCharacter() {
-  const wounds = document.getElementById("wounds");
+  const wounds = el("wounds");
   if (wounds) wounds.textContent = state.character?.wounds ?? 0;
 }
 
@@ -17,7 +18,7 @@ export function renderGlance() {
   const ch = state.character || {};
 
   const setVal = (id, val) => {
-    const el = document.getElementById(id);
+    const el = el(id);
     if (!el) return;
     const v = (val ?? "");
     if (el.value !== String(v)) el.value = String(v);
@@ -36,8 +37,8 @@ export function renderGlance() {
   setVal("glanceHomeworldSelect", ch.homeworld || ch.background || ch.race || "");
 
   // iOS select sync
-  const careerSel = document.getElementById("glanceCareerSelect");
-  const careerOther = document.getElementById("glanceCareerOther");
+  const careerSel = el("glanceCareerSelect");
+  const careerOther = el("glanceCareerOther");
   const career = String(ch.career || ch.class || "");
   if (careerSel) {
     const has = Array.from(careerSel.options).some(o => o.value === career);
@@ -53,8 +54,8 @@ export function renderGlance() {
     }
   }
 
-  const homeSel = document.getElementById(\"glanceHomeworldSelect\");
-  const homeOther = document.getElementById(\"glanceHomeworldOther\");
+  const homeSel = el(\"glanceHomeworldSelect\");
+  const homeOther = el(\"glanceHomeworldOther\");
   const home = String(ch.homeworld || ch.background || ch.race || \"\");
   if (homeSel) {
     const has = Array.from(homeSel.options).some(o => o.value === home);
@@ -74,13 +75,13 @@ export function renderGlance() {
 
 export function renderInventory() {
   // Controls
-  const search = document.getElementById("inventorySearch");
+  const search = el("inventorySearch");
   if (search && search.value !== (state.inventorySearch || "")) search.value = state.inventorySearch || "";
 
-  const sortSel = document.getElementById("inventorySort");
+  const sortSel = el("inventorySort");
   if (sortSel && sortSel.value !== (state.inventorySort || "name")) sortSel.value = state.inventorySort || "name";
 
-  const groupChk = document.getElementById("inventoryGroup");
+  const groupChk = el("inventoryGroup");
   if (groupChk && groupChk.checked !== Boolean(state.inventoryGroup)) groupChk.checked = Boolean(state.inventoryGroup);
 
   // Data
@@ -113,7 +114,7 @@ export function renderInventory() {
   });
 
   // Render table
-  const table = document.getElementById("inventoryTable");
+  const table = el("inventoryTable");
   if (table) {
     table.innerHTML = `<tr><th>Item</th><th>Category</th><th>Qty</th><th>Unit Wt</th><th>Total Wt</th><th>Traits</th><th>Actions</th></tr>`;
 
@@ -161,8 +162,8 @@ export function renderInventory() {
   }
 
   // Totals
-  const totalEl = document.getElementById("totalWeight");
-  const encEl = document.getElementById("encumbrance");
+  const totalEl = el("totalWeight");
+  const encEl = el("encumbrance");
 
   const total = (state.inventory || []).reduce((s, it) => {
     const u = Number(it?._unitWeight ?? it?.weight) || 0;
@@ -180,14 +181,14 @@ export function renderInventory() {
 }
 
 export function renderSelectedSlotLabel() {
-  const el = document.getElementById("selectedWeaponSlotLabel");
+  const el = el("selectedWeaponSlotLabel");
   if (!el) return;
   const s = (Number(state.selectedWeaponSlot) || 0) + 1;
   el.textContent = String(s);
 }
 
 export function renderWeaponSlots() {
-  const table = document.getElementById("weaponTable");
+  const table = el("weaponTable");
   if (!table) return;
 
   // keep header row
@@ -227,14 +228,14 @@ export function renderWeaponSlots() {
   });
 
   // Sync any other slot selects if present
-  const atkSel = document.getElementById("atk_weaponSlot");
+  const atkSel = el("atk_weaponSlot");
   if (atkSel && atkSel.value !== String(selected)) atkSel.value = String(selected);
-  const modSel = document.getElementById("weaponModSlotSelect");
+  const modSel = el("weaponModSlotSelect");
   if (modSel && modSel.value !== String(selected)) modSel.value = String(selected);
 }
 
 export function renderBrowser() {
-  const container = document.getElementById("browserResults");
+  const container = el("browserResults");
   if (!container) return;
 
   container.innerHTML = "";
@@ -274,7 +275,7 @@ export function renderBrowser() {
     </div>`;
   container.appendChild(header);
 
-  const sel = document.getElementById("browserPageSize");
+  const sel = el("browserPageSize");
   if (sel && sel.value !== String(size)) sel.value = String(size);
 
   const table = document.createElement("table");
@@ -356,10 +357,10 @@ export function renderBrowser() {
 
 
 export function renderDice() {
-  const res = document.getElementById("diceResult");
+  const res = el("diceResult");
   if (res) res.textContent = state.lastDiceResult || "";
 
-  const logEl = document.getElementById("diceLog");
+  const logEl = el("diceLog");
   if (!logEl) return;
   const items = state.diceLog || [];
   if (!items.length) {

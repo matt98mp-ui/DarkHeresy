@@ -1,4 +1,5 @@
 import { state } from "./state.js";
+import { el, qs, qsa } from "./dom.js";
 
 export function applyGMPreset(preset) {
   state.gmPreset = preset;
@@ -10,6 +11,6 @@ export function resetGMSettings() {
 
 export function toggleGMPanel() {
   state.gmOpen = !state.gmOpen;
-  const panel = document.getElementById("gmPanel");
+  const panel = el("gmPanel");
   if (panel) panel.style.display = state.gmOpen ? "block" : "none";
 }

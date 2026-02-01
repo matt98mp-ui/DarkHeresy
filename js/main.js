@@ -2,6 +2,7 @@ import { state } from "./state.js";
 import { initEvents } from "./events.js";
 import { renderAll } from "./ui.js";
 import { openBrowser } from "./browser.js";
+import { el, qs, qsa } from "./dom.js";
 
 const DENSITY_KEY = "dh_density";
 const THEME_KEY = "dh_theme";
@@ -48,7 +49,7 @@ function init() {
 
 
   function populateGlanceSelects() {
-    const careerSel = document.getElementById("glanceCareerSelect");
+    const careerSel = el("glanceCareerSelect");
     if (careerSel && careerSel.options.length === 0) {
       const list = state.data.classes || [];
       careerSel.innerHTML =
@@ -57,7 +58,7 @@ function init() {
         '<option value="__other__">Other…</option>';
     }
 
-    const homeSel = document.getElementById("glanceHomeworldSelect");
+    const homeSel = el("glanceHomeworldSelect");
     if (homeSel && homeSel.options.length === 0) {
       const list = (state.data.backgrounds && state.data.backgrounds.length) ? state.data.backgrounds : (state.data.races || []);
       homeSel.innerHTML =
@@ -67,7 +68,7 @@ function init() {
     }
   }
 
-    const homeList = document.getElementById("homeworldList");
+    const homeList = el("homeworldList");
     if (homeList && homeList.options.length === 0) {
       const list = (state.data.backgrounds && state.data.backgrounds.length) ? state.data.backgrounds : (state.data.races || []);
       homeList.innerHTML = list.slice(0, 1000).map(h => `<option value="${h.name}"></option>`).join("");
@@ -77,24 +78,24 @@ function init() {
 
 
   // Populate select inputs (minimal)
-  const weaponSelect = document.getElementById("weaponSelect");
+  const weaponSelect = el("weaponSelect");
   if (weaponSelect && weaponSelect.options.length === 0) {
     const ws = state.data.weapons || [];
     weaponSelect.innerHTML = ws.slice(0, 500).map(w => `<option>${w.name}</option>`).join("");
   }
   
-  const weaponModSelect = document.getElementById("weaponModSelect");
+  const weaponModSelect = el("weaponModSelect");
   if (weaponModSelect && weaponModSelect.options.length === 0) {
     const ms = state.data.weaponMods || [];
     weaponModSelect.innerHTML = ms.slice(0, 500).map(m => `<option>${m.name}</option>`).join("");
   }
-  const weaponModSlotSelect = document.getElementById("weaponModSlotSelect");
+  const weaponModSlotSelect = el("weaponModSlotSelect");
   if (weaponModSlotSelect && weaponModSlotSelect.options.length === 0) {
     weaponModSlotSelect.innerHTML = `<option value="0">Slot 1</option><option value="1">Slot 2</option><option value="2">Slot 3</option>`;
     weaponModSlotSelect.value = String(state.selectedWeaponSlot || 0);
   }
 
-const armorSelect = document.getElementById("armorSelect");
+const armorSelect = el("armorSelect");
   if (armorSelect && armorSelect.options.length === 0) {
     const as = state.data.armors || [];
     armorSelect.innerHTML = as.slice(0, 500).map(a => `<option>${a.name}</option>`).join("");

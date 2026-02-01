@@ -1,6 +1,7 @@
 import { state } from "./state.js";
 import { scheduleAutosave } from "./autosave.js";
 import { snapshot } from "./history.js";
+import { el, qs, qsa } from "./dom.js";
 
 const KEYS = ["str","dex","con","int","wis","cha"];
 const UPPER = {str:"STR",dex:"DEX",con:"CON",int:"INT",wis:"WIS",cha:"CHA"};
@@ -13,7 +14,7 @@ export function modFromScore(score) {
 export function readScoresFromDOM() {
   const scores = {};
   for (const k of KEYS) {
-    const el = document.getElementById(k);
+    const el = el(k);
     const v = el ? Number(el.value || 0) : (state.character?.scores?.[UPPER[k]] ?? 10);
     scores[UPPER[k]] = Number.isFinite(v) ? v : 10;
   }
@@ -23,7 +24,7 @@ export function readScoresFromDOM() {
 export function writeScoresToDOM(scores) {
   for (const k of KEYS) {
     const up = UPPER[k];
-    const el = document.getElementById(k);
+    const el = el(k);
     if (el && el.value !== String(scores[up] ?? 10)) el.value = String(scores[up] ?? 10);
   }
 }
@@ -40,15 +41,15 @@ export function syncAbilitiesToStateAndUI() {
   for (const k of KEYS) {
     const up = UPPER[k];
     const mod = state.character.abilities[up] ?? 0;
-    const out = document.getElementById("mod_" + k);
+    const out = el("mod_" + k);
     if (out) out.textContent = (mod>=0?"+":"") + String(mod);
   }
   // Save tables (many duplicates exist; update all matching prefixes)
   for (const up of Object.values(UPPER)) {
     const mod = state.character.abilities[up] ?? 0;
-    document.querySelectorAll(`[id^="save_abil_${up}"]`).forEach(el => el.textContent = (mod>=0?"+":"") + String(mod));
+    qsa(`[id^="save_abil_${up}"]`).forEach(el => el.textContent = (mod>=0?"+":"") + String(mod));
     // totals (prof ignored here; existing UI can add it)
-    document.querySelectorAll(`[id^="save_total_${up}"]`).forEach(el => el.textContent = (mod>=0?"+":"") + String(mod));
+    qsa(`[id^="save_total_${up}"]`).forEach(el => el.textContent = (mod>=0?"+":"") + String(mod));
   }
   scheduleAutosave();
 }

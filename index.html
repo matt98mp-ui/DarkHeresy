@@ -2015,9 +2015,9 @@ button:disabled, .btn:disabled{
   document.addEventListener("DOMContentLoaded", () => {
     loadTheme();
 
-    const sel = document.getElementById("themeSelect");
-    if (sel){
-      sel.addEventListener("change", (e) => {
+    const themeSel = document.getElementById("themeSelect");
+    if (themeSel){
+      themeSel.addEventListener("change", (e) => {
         const t = e.target.value;
         localStorage.setItem(KEY, t);
         applyTheme(t);
@@ -2029,7 +2029,7 @@ button:disabled, .btn:disabled{
       resetBtn.addEventListener("click", () => {
         localStorage.removeItem(KEY);
         applyTheme(DEFAULT_THEME);
-        if (sel) sel.value = DEFAULT_THEME;
+        if (themeSel) themeSel.value = DEFAULT_THEME;
       });
     }
   });

@@ -14,20 +14,21 @@ import { state } from "./state.js";
 import { scheduleAutosave } from "./autosave.js";
 import { snapshot, undo, redo, canUndo, canRedo } from "./history.js";
 import { renderAll } from "./ui.js";
+import { el, qs, qsa } from "./dom.js";
 
 
 function updateUndoRedoUI() {
-  const u = document.querySelector('[data-action="undo"]');
-  const r = document.querySelector('[data-action="redo"]');
+  const u = qs('[data-action="undo"]');
+  const r = qs('[data-action="redo"]');
   if (u) u.disabled = !canUndo();
   if (r) r.disabled = !canRedo();
 }
 
 
 function validateDatalistInput(inputId, listId, warnId) {
-  const input = document.getElementById(inputId);
-  const list = document.getElementById(listId);
-  const warn = document.getElementById(warnId);
+  const input = el(inputId);
+  const list = el(listId);
+  const warn = el(warnId);
   if (!input || !list) return;
 
   const val = String(input.value || "").trim();
@@ -71,7 +72,7 @@ export function initEvents() {
 
   // Glance (editable header) bindings
   const bind = (id, fn, isNumber=false) => {
-    const el = document.getElementById(id);
+    const el = el(id);
     if (!el || el.dataset.bound) return;
     el.dataset.bound = "1";
     el.addEventListener("input", () => {
@@ -92,13 +93,13 @@ export function initEvents() {
   bind("glanceCareerSelect", (v) => (state.character.career = String(v || "")));
   bind("glanceHomeworldSelect", (v) => (state.character.homeworld = String(v || "")));
   // Validate against suggestion lists (still allow custom values)
-  const careerInput = document.getElementById("glanceCareerSelect");
+  const careerInput = el("glanceCareerSelect");
   if (careerInput && !careerInput.dataset.boundValidate) {
     careerInput.dataset.boundValidate = "1";
     careerInput.addEventListener("input", () => validateDatalistInput("glanceCareerSelect", "careerList", "careerWarn"));
     validateDatalistInput("glanceCareerSelect", "careerList", "careerWarn");
   }
-  const homeInput = document.getElementById("glanceHomeworldSelect");
+  const homeInput = el("glanceHomeworldSelect");
   if (homeInput && !homeInput.dataset.boundValidate) {
     homeInput.dataset.boundValidate = "1";
     homeInput.addEventListener("input", () => validateDatalistInput("glanceHomeworldSelect", "homeworldList", "homeworldWarn"));
@@ -147,15 +148,15 @@ export function initEvents() {
         state.inventoryGroup = true;
         document.body.dataset.theme = "grimdark";
         document.body.dataset.density = "comfortable";
-        const themeSelect = document.getElementById("themeSelect");
+        const themeSelect = el("themeSelect");
         if (themeSelect) themeSelect.value = "grimdark";
-        const ds = document.getElementById("densitySelect");
+        const ds = el("densitySelect");
         if (ds) ds.value = "comfortable";
-        const invS = document.getElementById("inventorySearch");
+        const invS = el("inventorySearch");
         if (invS) invS.value = "";
-        const invSort = document.getElementById("inventorySort");
+        const invSort = el("inventorySort");
         if (invSort) invSort.value = "name";
-        const invGrp = document.getElementById("inventoryGroup");
+        const invGrp = el("inventoryGroup");
         if (invGrp) invGrp.checked = true;
         // refresh UI
         renderAll();
@@ -167,10 +168,10 @@ export function initEvents() {
         document.body.dataset.theme = "grimdark";
         document.body.dataset.density = "comfortable";
         // sync selects
-        const themeSelect = document.getElementById("themeSelect");
-        if (themeSelect) themeSelect.value = "grimdark";
-        const ds = document.getElementById("densitySelect");
-        if (ds) ds.value = "comfortable";
+        const themeSelect2 = el("themeSelect");
+        if (themeSelect2) themeSelect2.value = "grimdark";
+        const ds2 = el("densitySelect");
+        if (ds2) ds2.value = "comfortable";
         return;
       // --- modal actions ---
       case "info-equip-weapon":
@@ -211,7 +212,7 @@ export function initEvents() {
       // --- main buttons ---
       case "equip-weapon-slot":
         snapshot(); {
-        const sel = document.getElementById("weaponSelect");
+        const sel = el("weaponSelect");
         const chosen = findByName(state.data?.weapons, sel?.value);
         if (chosen) equipWeaponSlot(state.selectedWeaponSlot ?? 0, chosen);
         break;
@@ -222,13 +223,13 @@ export function initEvents() {
         snapshot(); equipArmor({ name: "Flak Armor" }); break;
 
       case "export-character": {
-        const box = document.getElementById("jsonBox");
+        const box = el("jsonBox");
         if (box) box.value = exportCharacter();
         break;
       }
       case "import-character":
         snapshot(); {
-        const box = document.getElementById("jsonBox");
+        const box = el("jsonBox");
         if (box && box.value) importCharacter(box.value);
         break;
       }
@@ -240,7 +241,7 @@ export function initEvents() {
       case "roll-dice":
         snapshot();
         {
-          const expr = document.getElementById("diceExpr")?.value || "1d20";
+          const expr = el("diceExpr")?.value || "1d20";
           const r = rollDice(expr);
           const msg = `${expr} = ${r.total} [${r.rolls.join(", ")}]${r.mod ? (r.mod>0?` +${r.mod}`:` ${r.mod}`) : ""}`;
           state.lastDiceResult = msg;
@@ -357,8 +358,8 @@ export function initEvents() {
         break;
       }
       case "attach-weapon-mod": {
-        const slotSel = document.getElementById("weaponModSlotSelect");
-        const modSel = document.getElementById("weaponModSelect");
+        const slotSel = el("weaponModSlotSelect");
+        const modSel = el("weaponModSelect");
         const slot = Number(slotSel?.value || state.selectedWeaponSlot || 0);
         const name = modSel?.value || "";
         const mod = (state.data.weaponMods || []).find(m => m.name === name) || (name ? { name } : null);
@@ -466,8 +467,8 @@ export function initEvents() {
 
   
   // Theme selector
-  const themeSel = document.getElementById("themeSelect");
-  const densitySel = document.getElementById("densitySelect");
+  const themeSel = el("themeSelect");
+  const densitySel = el("densitySelect");
   if (themeSel && !themeSel.dataset.bound) {
     themeSel.dataset.bound = "1";
     themeSel.addEventListener("change", () => {
@@ -493,8 +494,8 @@ export function initEvents() {
 
 
   // iOS-friendly Career/Homeworld selects with Other… fallback
-  const careerSel = document.getElementById("glanceCareerSelect");
-  const careerOther = document.getElementById("glanceCareerOther");
+  const careerSel = el("glanceCareerSelect");
+  const careerOther = el("glanceCareerOther");
   if (careerSel && !careerSel.dataset.boundIOS) {
     careerSel.dataset.boundIOS = "1";
     careerSel.addEventListener("change", () => {
@@ -524,8 +525,8 @@ export function initEvents() {
     });
   }
 
-  const homeSel = document.getElementById("glanceHomeworldSelect");
-  const homeOther = document.getElementById("glanceHomeworldOther");
+  const homeSel = el("glanceHomeworldSelect");
+  const homeOther = el("glanceHomeworldOther");
   if (homeSel && !homeSel.dataset.boundIOS) {
     homeSel.dataset.boundIOS = "1";
     homeSel.addEventListener("change", () => {
@@ -556,15 +557,15 @@ export function initEvents() {
   }
 
 // Inventory controls
-  document.getElementById("inventorySearch")?.addEventListener("input", (e) => {
+  el("inventorySearch")?.addEventListener("input", (e) => {
     state.inventorySearch = e.target.value || "";
     renderAll();
   });
-  document.getElementById("inventorySort")?.addEventListener("change", (e) => {
+  el("inventorySort")?.addEventListener("change", (e) => {
     state.inventorySort = e.target.value || "name";
     renderAll();
   });
-  document.getElementById("inventoryGroup")?.addEventListener("change", (e) => {
+  el("inventoryGroup")?.addEventListener("change", (e) => {
     state.inventoryGroup = Boolean(e.target.checked);
     renderAll();
   });
@@ -572,7 +573,7 @@ export function initEvents() {
 // Browser search input
   
   // Page size dropdown
-  document.getElementById("browserPageSize")?.addEventListener("change", (e) => {
+  el("browserPageSize")?.addEventListener("change", (e) => {
     const v = Number(e.target.value) || 25;
     state.browserPageSize = v;
     try { localStorage.setItem("dh_browser_page_size", String(v)); } catch {}
@@ -581,18 +582,18 @@ export function initEvents() {
     renderAll();
   });
 
-document.getElementById("browserSearch")?.addEventListener("input", (e) => {
+el("browserSearch")?.addEventListener("input", (e) => {
     browserSearch(e.target.value);
     state.browserSelectedIndex = 0;
     renderAll();
   });
 
   // Keep selected weapon slot in sync with other selectors (if present)
-  document.getElementById("atk_weaponSlot")?.addEventListener("change", (e) => {
+  el("atk_weaponSlot")?.addEventListener("change", (e) => {
     state.selectedWeaponSlot = Number(e.target.value) || 0;
     renderAll();
   });
-  document.getElementById("weaponModSlotSelect")?.addEventListener("change", (e) => {
+  el("weaponModSlotSelect")?.addEventListener("change", (e) => {
     state.selectedWeaponSlot = Number(e.target.value) || 0;
     renderAll();
   });
@@ -600,7 +601,7 @@ document.getElementById("browserSearch")?.addEventListener("input", (e) => {
   
   // Ability score inputs → recompute mods/saves
   ["str","dex","con","int","wis","cha"].forEach((id) => {
-    const el = document.getElementById(id);
+    const el = el(id);
     if (!el || el.dataset.boundAbil) return;
     el.dataset.boundAbil = "1";
     el.addEventListener("input", () => {
