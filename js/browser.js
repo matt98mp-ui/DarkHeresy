@@ -9,7 +9,7 @@ function loadPersistedState() {
     const obj = JSON.parse(raw);
     if (obj && typeof obj === "object") state.browserStateByKind = obj;
   } catch {
-    // ignore storage failures
+    void 0;
   }
 }
 
@@ -17,7 +17,7 @@ function savePersistedState() {
   try {
     localStorage.setItem(BROWSER_STATE_KEY, JSON.stringify(state.browserStateByKind || {}));
   } catch {
-    // ignore storage failures
+    void 0;
   }
 }
 
