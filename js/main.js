@@ -72,7 +72,6 @@ function init() {
       const list = (state.data.backgrounds && state.data.backgrounds.length) ? state.data.backgrounds : (state.data.races || []);
       homeList.innerHTML = list.slice(0, 1000).map(h => `<option value="${h.name}"></option>`).join("");
     }
-  }
 
 
 
