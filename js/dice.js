@@ -1,9 +1,5 @@
 import { state } from "./state.js";
 
-function nowStamp() {
-  return new Date().toLocaleString();
-}
-
 export function ensureDiceLog() {
   state.diceLog ||= [];
 }

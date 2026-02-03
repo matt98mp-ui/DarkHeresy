@@ -2,7 +2,7 @@ import { state } from "./state.js";
 import { initEvents } from "./events.js";
 import { renderAll } from "./ui.js";
 import { openBrowser } from "./browser.js";
-import { el, qs, qsa } from "./dom.js";
+import { el } from "./dom.js";
 
 const DENSITY_KEY = "dh_density";
 const THEME_KEY = "dh_theme";
@@ -28,11 +28,12 @@ function init() {
     if (t) document.body.dataset.theme = t;
     const d = localStorage.getItem(DENSITY_KEY);
     if (d) document.body.dataset.density = d;
-  } catch {}
+  } catch {
+    // ignore storage failures
+  }
 
   // Centralize all data so browser/search can use it predictably
   state.data = {
-
     weapons: window.WEAPONS ?? [],
     armors: window.ARMORS ?? [],
     gear: window.GEAR ?? [],
@@ -46,34 +47,29 @@ function init() {
     talentTrees: window.TALENT_TREES ?? [],
   };
 
-
-
-    const careerSel = el("glanceCareerSelect");
-    if (careerSel && careerSel.options.length === 0) {
-      const list = state.data.classes || [];
-      careerSel.innerHTML =
-        '<option value="">—</option>' +
-        list.slice(0, 1000).map(c => `<option value="${c.name}">${c.name}</option>`).join("") +
-        '<option value="__other__">Other…</option>';
-    }
-
-    const homeSel = el("glanceHomeworldSelect");
-    if (homeSel && homeSel.options.length === 0) {
-      const list = (state.data.backgrounds && state.data.backgrounds.length) ? state.data.backgrounds : (state.data.races || []);
-      homeSel.innerHTML =
-        '<option value="">—</option>' +
-        list.slice(0, 1000).map(h => `<option value="${h.name}">${h.name}</option>`).join("") +
-        '<option value="__other__">Other…</option>';
-    }
+  const careerSel = el("glanceCareerSelect");
+  if (careerSel && careerSel.options.length === 0) {
+    const list = state.data.classes || [];
+    careerSel.innerHTML =
+      '<option value="">—</option>' +
+      list.slice(0, 1000).map(c => `<option value="${c.name}">${c.name}</option>`).join("") +
+      '<option value="__other__">Other…</option>';
   }
 
-    const homeList = el("homeworldList");
-    if (homeList && homeList.options.length === 0) {
-      const list = (state.data.backgrounds && state.data.backgrounds.length) ? state.data.backgrounds : (state.data.races || []);
-      homeList.innerHTML = list.slice(0, 1000).map(h => `<option value="${h.name}"></option>`).join("");
-    }
+  const homeSel = el("glanceHomeworldSelect");
+  if (homeSel && homeSel.options.length === 0) {
+    const list = (state.data.backgrounds && state.data.backgrounds.length) ? state.data.backgrounds : (state.data.races || []);
+    homeSel.innerHTML =
+      '<option value="">—</option>' +
+      list.slice(0, 1000).map(h => `<option value="${h.name}">${h.name}</option>`).join("") +
+      '<option value="__other__">Other…</option>';
+  }
 
-
+  const homeList = el("homeworldList");
+  if (homeList && homeList.options.length === 0) {
+    const list = (state.data.backgrounds && state.data.backgrounds.length) ? state.data.backgrounds : (state.data.races || []);
+    homeList.innerHTML = list.slice(0, 1000).map(h => `<option value="${h.name}"></option>`).join("");
+  }
 
   // Populate select inputs (minimal)
   const weaponSelect = el("weaponSelect");
@@ -93,7 +89,7 @@ function init() {
     weaponModSlotSelect.value = String(state.selectedWeaponSlot || 0);
   }
 
-const armorSelect = el("armorSelect");
+  const armorSelect = el("armorSelect");
   if (armorSelect && armorSelect.options.length === 0) {
     const as = state.data.armors || [];
     armorSelect.innerHTML = as.slice(0, 500).map(a => `<option>${a.name}</option>`).join("");
@@ -111,7 +107,9 @@ const armorSelect = el("armorSelect");
   try {
     const saved = Number(localStorage.getItem(BROWSER_PAGE_SIZE_KEY));
     if (saved === 25 || saved === 50 || saved === 100) state.browserPageSize = saved;
-  } catch {}
+  } catch {
+    // ignore storage failures
+  }
 
 
   // Restore inventory UI preferences
@@ -125,7 +123,9 @@ const armorSelect = el("armorSelect");
         if (typeof o.group === "boolean") state.inventoryGroup = o.group;
       }
     }
-  } catch {}
+  } catch {
+    // ignore storage failures
+  }
 
   // Start browser on a sensible default
   openBrowser(state.browserKind || "weapons");
@@ -133,6 +133,6 @@ const armorSelect = el("armorSelect");
 
   initEvents();
   renderAll();
-
+}
 
 window.addEventListener("DOMContentLoaded", init);
