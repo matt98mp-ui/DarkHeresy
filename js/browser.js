@@ -8,13 +8,17 @@ function loadPersistedState() {
     if (!raw) return;
     const obj = JSON.parse(raw);
     if (obj && typeof obj === "object") state.browserStateByKind = obj;
-  } catch {}
+  } catch {
+    void 0;
+  }
 }
 
 function savePersistedState() {
   try {
     localStorage.setItem(BROWSER_STATE_KEY, JSON.stringify(state.browserStateByKind || {}));
-  } catch {}
+  } catch {
+    void 0;
+  }
 }
 
 loadPersistedState();
