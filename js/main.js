@@ -48,7 +48,6 @@ function init() {
 
 
 
-  function populateGlanceSelects() {
     const careerSel = el("glanceCareerSelect");
     if (careerSel && careerSel.options.length === 0) {
       const list = state.data.classes || [];
@@ -132,7 +131,6 @@ const armorSelect = el("armorSelect");
   // Start browser on a sensible default
   openBrowser(state.browserKind || "weapons");
 
-  populateGlanceSelects();
 
   initEvents();
   renderAll();
