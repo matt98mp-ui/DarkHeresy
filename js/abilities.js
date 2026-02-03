@@ -1,7 +1,7 @@
 import { state } from "./state.js";
 import { scheduleAutosave } from "./autosave.js";
 import { snapshot } from "./history.js";
-import { el, qs, qsa } from "./dom.js";
+import { el, qsa } from "./dom.js";
 
 const KEYS = ["str","dex","con","int","wis","cha"];
 const UPPER = {str:"STR",dex:"DEX",con:"CON",int:"INT",wis:"WIS",cha:"CHA"};
@@ -14,8 +14,8 @@ export function modFromScore(score) {
 export function readScoresFromDOM() {
   const scores = {};
   for (const k of KEYS) {
-    const el = el(k);
-    const v = el ? Number(el.value || 0) : (state.character?.scores?.[UPPER[k]] ?? 10);
+    const node = el(k);
+    const v = node ? Number(node.value || 0) : (state.character?.scores?.[UPPER[k]] ?? 10);
     scores[UPPER[k]] = Number.isFinite(v) ? v : 10;
   }
   return scores;
@@ -24,8 +24,8 @@ export function readScoresFromDOM() {
 export function writeScoresToDOM(scores) {
   for (const k of KEYS) {
     const up = UPPER[k];
-    const el = el(k);
-    if (el && el.value !== String(scores[up] ?? 10)) el.value = String(scores[up] ?? 10);
+    const node = el(k);
+    if (node && node.value !== String(scores[up] ?? 10)) node.value = String(scores[up] ?? 10);
   }
 }
 

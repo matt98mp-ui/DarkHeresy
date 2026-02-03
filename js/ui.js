@@ -1,6 +1,5 @@
 import { state } from "./state.js";
-import { showInfoForSelected } from "./info.js";
-import { el, qs, qsa } from "./dom.js";
+import { el } from "./dom.js";
 
 function esc(s) {
   return String(s ?? "").replace(/[&<>"]/g, (c) => ({
@@ -18,10 +17,10 @@ export function renderGlance() {
   const ch = state.character || {};
 
   const setVal = (id, val) => {
-    const el = el(id);
-    if (!el) return;
+    const node = el(id);
+    if (!node) return;
     const v = (val ?? "");
-    if (el.value !== String(v)) el.value = String(v);
+    if (node.value !== String(v)) node.value = String(v);
   };
 
   // Name + vitals
@@ -181,10 +180,10 @@ export function renderInventory() {
 }
 
 export function renderSelectedSlotLabel() {
-  const el = el("selectedWeaponSlotLabel");
-  if (!el) return;
+  const node = el("selectedWeaponSlotLabel");
+  if (!node) return;
   const s = (Number(state.selectedWeaponSlot) || 0) + 1;
-  el.textContent = String(s);
+  node.textContent = String(s);
 }
 
 export function renderWeaponSlots() {

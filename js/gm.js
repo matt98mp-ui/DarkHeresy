@@ -1,5 +1,5 @@
 import { state } from "./state.js";
-import { el, qs, qsa } from "./dom.js";
+import { el } from "./dom.js";
 
 export function applyGMPreset(preset) {
   state.gmPreset = preset;
