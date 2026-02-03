@@ -49,25 +49,25 @@ export function renderGlance() {
       careerSel.value = "__other__";
       if (careerOther) { careerOther.style.display = "inline-block"; careerOther.value = career; }
     } else {
-      careerSel.value = \"\";
-      if (careerOther) careerOther.style.display = \"none\";
+      careerSel.value = "";
+      if (careerOther) careerOther.style.display = "none";
     }
   }
 
-  const homeSel = el(\"glanceHomeworldSelect\");
-  const homeOther = el(\"glanceHomeworldOther\");
-  const home = String(ch.homeworld || ch.background || ch.race || \"\");
+  const homeSel = el("glanceHomeworldSelect");
+  const homeOther = el("glanceHomeworldOther");
+  const home = String(ch.homeworld || ch.background || ch.race || "");
   if (homeSel) {
     const has = Array.from(homeSel.options).some(o => o.value === home);
     if (home && has) {
       homeSel.value = home;
-      if (homeOther) homeOther.style.display = \"none\";
+      if (homeOther) homeOther.style.display = "none";
     } else if (home) {
-      homeSel.value = \"__other__\";
-      if (homeOther) { homeOther.style.display = \"inline-block\"; homeOther.value = home; }
+      homeSel.value = "__other__";
+      if (homeOther) { homeOther.style.display = "inline-block"; homeOther.value = home; }
     } else {
-      homeSel.value = \"\";
-      if (homeOther) homeOther.style.display = \"none\";
+      homeSel.value = "";
+      if (homeOther) homeOther.style.display = "none";
     }
   }
 }
