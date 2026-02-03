@@ -123,12 +123,18 @@ export function initEvents() {
     if (!btn) return;
 
     switch (btn.dataset.action) {
-      case "undo":
-        if (undo()) { renderAll(); updateUndoRedoUI(); }
-    updateUndoRedoUI();
+      case "undo": {
+        if (undo()) {
+          renderAll();
+        }
+        updateUndoRedoUI();
         return;
-      case "redo":
-        if (redo()) { renderAll(); updateUndoRedoUI(); }
+      }
+      case "redo": {
+        if (redo()) {
+          renderAll();
+        }
+        updateUndoRedoUI();
         return;
       case "reset-ui": {
         // Clears UI-only localStorage keys (does not touch character slots)
