@@ -1,5 +1,5 @@
 import { state } from "./state.js";
-import { el, qs, qsa } from "./dom.js";
+import { el } from "./dom.js";
 
 function esc(s) {
   return String(s ?? "").replace(/[&<>"]/g, (c) => ({

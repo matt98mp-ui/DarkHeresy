@@ -14,7 +14,7 @@ import { state } from "./state.js";
 import { scheduleAutosave } from "./autosave.js";
 import { snapshot, undo, redo, canUndo, canRedo } from "./history.js";
 import { renderAll } from "./ui.js";
-import { el, qs, qsa } from "./dom.js";
+import { el, qs } from "./dom.js";
 
 
 function updateUndoRedoUI() {
@@ -55,7 +55,9 @@ function saveInvPrefs() {
       sort: state.inventorySort || "name",
       group: Boolean(state.inventoryGroup),
     }));
-  } catch {}
+  } catch {
+    void 0;
+  }
 }
 
 function isTypingTarget(t) {
@@ -128,7 +130,7 @@ export function initEvents() {
       case "redo":
         if (redo()) { renderAll(); updateUndoRedoUI(); }
         return;
-      case "reset-ui":
+      case "reset-ui": {
         // Clears UI-only localStorage keys (does not touch character slots)
         try {
           localStorage.removeItem("dh_browser_page_size");
@@ -136,7 +138,9 @@ export function initEvents() {
           localStorage.removeItem("dh_inventory_ui");
           localStorage.removeItem("dh_theme");
           localStorage.removeItem("dh_density");
-        } catch {}
+        } catch {
+          void 0;
+        }
         // reset in-memory UI state
         state.browserPageSize = 25;
         state.browserPage = 0;
@@ -162,9 +166,15 @@ export function initEvents() {
         renderAll();
         updateUndoRedoUI?.();
         return;
+      }
 
-      case "reset-theme":
-        try { localStorage.removeItem("dh_theme"); localStorage.removeItem("dh_density"); } catch {}
+      case "reset-theme": {
+        try {
+          localStorage.removeItem("dh_theme");
+          localStorage.removeItem("dh_density");
+        } catch {
+          void 0;
+        }
         document.body.dataset.theme = "grimdark";
         document.body.dataset.density = "comfortable";
         // sync selects
@@ -173,6 +183,7 @@ export function initEvents() {
         const ds2 = el("densitySelect");
         if (ds2) ds2.value = "comfortable";
         return;
+      }
       // --- modal actions ---
       case "info-equip-weapon":
         snapshot();
@@ -210,8 +221,8 @@ export function initEvents() {
       }
 
       // --- main buttons ---
-      case "equip-weapon-slot":
-        snapshot(); {
+      case "equip-weapon-slot": {
+        snapshot();
         const sel = el("weaponSelect");
         const chosen = findByName(state.data?.weapons, sel?.value);
         if (chosen) equipWeaponSlot(state.selectedWeaponSlot ?? 0, chosen);
@@ -227,8 +238,8 @@ export function initEvents() {
         if (box) box.value = exportCharacter();
         break;
       }
-      case "import-character":
-        snapshot(); {
+      case "import-character": {
+        snapshot();
         const box = el("jsonBox");
         if (box && box.value) importCharacter(box.value);
         break;
@@ -338,7 +349,7 @@ export function initEvents() {
         clearDiceLog();
         state.lastDiceResult = "";
         break;
-      case "recalc-hp":
+      case "recalc-hp": {
         snapshot();
         // Simple recalc: (rank/level or 1) * (6 + CON mod), minimum 1
         state.character ||= {};
@@ -346,6 +357,7 @@ export function initEvents() {
         const conMod = state.character?.abilities?.CON ?? 0;
         state.character.wounds = Math.max(1, lvl * (6 + conMod));
         break;
+      }
       case "print-sheet":
         window.print();
         return;
@@ -474,7 +486,11 @@ export function initEvents() {
     themeSel.addEventListener("change", () => {
       const v = themeSel.value;
       document.body.dataset.theme = v;
-      try { localStorage.setItem("dh_theme", v); } catch {}
+      try {
+        localStorage.setItem("dh_theme", v);
+      } catch {
+        void 0;
+      }
     });
   }
 
@@ -486,7 +502,11 @@ export function initEvents() {
     densitySel.addEventListener("change", () => {
       const v = densitySel.value;
       document.body.dataset.density = v;
-      try { localStorage.setItem("dh_density", v); } catch {}
+      try {
+        localStorage.setItem("dh_density", v);
+      } catch {
+        void 0;
+      }
     });
   }
 
@@ -574,7 +594,11 @@ export function initEvents() {
   el("browserPageSize")?.addEventListener("change", (e) => {
     const v = Number(e.target.value) || 25;
     state.browserPageSize = v;
-    try { localStorage.setItem("dh_browser_page_size", String(v)); } catch {}
+    try {
+      localStorage.setItem("dh_browser_page_size", String(v));
+    } catch {
+      void 0;
+    }
     state.browserPage = 0;
     openBrowser(state.browserKind);
     renderAll();

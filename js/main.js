@@ -2,7 +2,7 @@ import { state } from "./state.js";
 import { initEvents } from "./events.js";
 import { renderAll } from "./ui.js";
 import { openBrowser } from "./browser.js";
-import { el, qs, qsa } from "./dom.js";
+import { el } from "./dom.js";
 
 const DENSITY_KEY = "dh_density";
 const THEME_KEY = "dh_theme";
@@ -28,7 +28,9 @@ function init() {
     if (t) document.body.dataset.theme = t;
     const d = localStorage.getItem(DENSITY_KEY);
     if (d) document.body.dataset.density = d;
-  } catch {}
+  } catch {
+    void 0;
+  }
 
   // Centralize all data so browser/search can use it predictably
   state.data = {
@@ -111,7 +113,9 @@ const armorSelect = el("armorSelect");
   try {
     const saved = Number(localStorage.getItem(BROWSER_PAGE_SIZE_KEY));
     if (saved === 25 || saved === 50 || saved === 100) state.browserPageSize = saved;
-  } catch {}
+  } catch {
+    void 0;
+  }
 
 
   // Restore inventory UI preferences
@@ -125,7 +129,9 @@ const armorSelect = el("armorSelect");
         if (typeof o.group === "boolean") state.inventoryGroup = o.group;
       }
     }
-  } catch {}
+  } catch {
+    void 0;
+  }
 
   // Start browser on a sensible default
   openBrowser(state.browserKind || "weapons");
