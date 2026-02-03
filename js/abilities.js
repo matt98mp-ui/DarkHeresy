@@ -1,7 +1,7 @@
 import { state } from "./state.js";
 import { scheduleAutosave } from "./autosave.js";
 import { snapshot } from "./history.js";
-import { el, qsa } from "./dom.js";
+import { el as getEl, qsa } from "./dom.js";
 
 const KEYS = ["str","dex","con","int","wis","cha"];
 const UPPER = {str:"STR",dex:"DEX",con:"CON",int:"INT",wis:"WIS",cha:"CHA"};
@@ -14,7 +14,7 @@ export function modFromScore(score) {
 export function readScoresFromDOM() {
   const scores = {};
   for (const k of KEYS) {
-    const node = el(k);
+    const node = getEl(k);
     const v = node ? Number(node.value || 0) : (state.character?.scores?.[UPPER[k]] ?? 10);
     scores[UPPER[k]] = Number.isFinite(v) ? v : 10;
   }
@@ -24,7 +24,7 @@ export function readScoresFromDOM() {
 export function writeScoresToDOM(scores) {
   for (const k of KEYS) {
     const up = UPPER[k];
-    const node = el(k);
+    const node = getEl(k);
     if (node && node.value !== String(scores[up] ?? 10)) node.value = String(scores[up] ?? 10);
   }
 }
@@ -41,7 +41,7 @@ export function syncAbilitiesToStateAndUI() {
   for (const k of KEYS) {
     const up = UPPER[k];
     const mod = state.character.abilities[up] ?? 0;
-    const out = el("mod_" + k);
+    const out = getEl("mod_" + k);
     if (out) out.textContent = (mod>=0?"+":"") + String(mod);
   }
   // Save tables (many duplicates exist; update all matching prefixes)

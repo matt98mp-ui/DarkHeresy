@@ -1,5 +1,5 @@
 import { state } from "./state.js";
-import { el } from "./dom.js";
+import { el as getEl } from "./dom.js";
 
 function esc(s) {
   return String(s ?? "").replace(/[&<>"]/g, (c) => ({
@@ -8,7 +8,7 @@ function esc(s) {
 }
 
 export function renderCharacter() {
-  const wounds = el("wounds");
+  const wounds = getEl("wounds");
   if (wounds) wounds.textContent = state.character?.wounds ?? 0;
 }
 
@@ -17,7 +17,7 @@ export function renderGlance() {
   const ch = state.character || {};
 
   const setVal = (id, val) => {
-    const node = el(id);
+    const node = getEl(id);
     if (!node) return;
     const v = (val ?? "");
     if (node.value !== String(v)) node.value = String(v);
@@ -36,8 +36,8 @@ export function renderGlance() {
   setVal("glanceHomeworldSelect", ch.homeworld || ch.background || ch.race || "");
 
   // iOS select sync
-  const careerSel = el("glanceCareerSelect");
-  const careerOther = el("glanceCareerOther");
+  const careerSel = getEl("glanceCareerSelect");
+  const careerOther = getEl("glanceCareerOther");
   const career = String(ch.career || ch.class || "");
   if (careerSel) {
     const has = Array.from(careerSel.options).some(o => o.value === career);
@@ -53,8 +53,8 @@ export function renderGlance() {
     }
   }
 
-  const homeSel = el("glanceHomeworldSelect");
-  const homeOther = el("glanceHomeworldOther");
+  const homeSel = getEl("glanceHomeworldSelect");
+  const homeOther = getEl("glanceHomeworldOther");
   const home = String(ch.homeworld || ch.background || ch.race || "");
   if (homeSel) {
     const has = Array.from(homeSel.options).some(o => o.value === home);
@@ -74,13 +74,13 @@ export function renderGlance() {
 
 export function renderInventory() {
   // Controls
-  const search = el("inventorySearch");
+  const search = getEl("inventorySearch");
   if (search && search.value !== (state.inventorySearch || "")) search.value = state.inventorySearch || "";
 
-  const sortSel = el("inventorySort");
+  const sortSel = getEl("inventorySort");
   if (sortSel && sortSel.value !== (state.inventorySort || "name")) sortSel.value = state.inventorySort || "name";
 
-  const groupChk = el("inventoryGroup");
+  const groupChk = getEl("inventoryGroup");
   if (groupChk && groupChk.checked !== Boolean(state.inventoryGroup)) groupChk.checked = Boolean(state.inventoryGroup);
 
   // Data
@@ -113,7 +113,7 @@ export function renderInventory() {
   });
 
   // Render table
-  const table = el("inventoryTable");
+  const table = getEl("inventoryTable");
   if (table) {
     table.innerHTML = `<tr><th>Item</th><th>Category</th><th>Qty</th><th>Unit Wt</th><th>Total Wt</th><th>Traits</th><th>Actions</th></tr>`;
 
@@ -161,8 +161,8 @@ export function renderInventory() {
   }
 
   // Totals
-  const totalEl = el("totalWeight");
-  const encEl = el("encumbrance");
+  const totalEl = getEl("totalWeight");
+  const encEl = getEl("encumbrance");
 
   const total = (state.inventory || []).reduce((s, it) => {
     const u = Number(it?._unitWeight ?? it?.weight) || 0;
@@ -180,14 +180,14 @@ export function renderInventory() {
 }
 
 export function renderSelectedSlotLabel() {
-  const node = el("selectedWeaponSlotLabel");
+  const node = getEl("selectedWeaponSlotLabel");
   if (!node) return;
   const s = (Number(state.selectedWeaponSlot) || 0) + 1;
   node.textContent = String(s);
 }
 
 export function renderWeaponSlots() {
-  const table = el("weaponTable");
+  const table = getEl("weaponTable");
   if (!table) return;
 
   // keep header row
@@ -227,14 +227,14 @@ export function renderWeaponSlots() {
   });
 
   // Sync any other slot selects if present
-  const atkSel = el("atk_weaponSlot");
+  const atkSel = getEl("atk_weaponSlot");
   if (atkSel && atkSel.value !== String(selected)) atkSel.value = String(selected);
-  const modSel = el("weaponModSlotSelect");
+  const modSel = getEl("weaponModSlotSelect");
   if (modSel && modSel.value !== String(selected)) modSel.value = String(selected);
 }
 
 export function renderBrowser() {
-  const container = el("browserResults");
+  const container = getEl("browserResults");
   if (!container) return;
 
   container.innerHTML = "";
@@ -274,7 +274,7 @@ export function renderBrowser() {
     </div>`;
   container.appendChild(header);
 
-  const sel = el("browserPageSize");
+  const sel = getEl("browserPageSize");
   if (sel && sel.value !== String(size)) sel.value = String(size);
 
   const table = document.createElement("table");
@@ -356,10 +356,10 @@ export function renderBrowser() {
 
 
 export function renderDice() {
-  const res = el("diceResult");
+  const res = getEl("diceResult");
   if (res) res.textContent = state.lastDiceResult || "";
 
-  const logEl = el("diceLog");
+  const logEl = getEl("diceLog");
   if (!logEl) return;
   const items = state.diceLog || [];
   if (!items.length) {
