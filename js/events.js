@@ -56,7 +56,7 @@ function saveInvPrefs() {
       group: Boolean(state.inventoryGroup),
     }));
   } catch {
-    // ignore storage failures
+    void 0;
   }
 }
 
@@ -136,7 +136,6 @@ export function initEvents() {
         }
         updateUndoRedoUI();
         return;
-      }
       case "reset-ui": {
         // Clears UI-only localStorage keys (does not touch character slots)
         try {
@@ -146,7 +145,7 @@ export function initEvents() {
           localStorage.removeItem("dh_theme");
           localStorage.removeItem("dh_density");
         } catch {
-          // ignore storage failures
+          void 0;
         }
         // reset in-memory UI state
         state.browserPageSize = 25;
@@ -180,7 +179,7 @@ export function initEvents() {
           localStorage.removeItem("dh_theme");
           localStorage.removeItem("dh_density");
         } catch {
-          // ignore storage failures
+          void 0;
         }
         document.body.dataset.theme = "grimdark";
         document.body.dataset.density = "comfortable";
@@ -496,7 +495,7 @@ export function initEvents() {
       try {
         localStorage.setItem("dh_theme", v);
       } catch {
-        // ignore storage failures
+        void 0;
       }
     });
   }
@@ -512,7 +511,7 @@ export function initEvents() {
       try {
         localStorage.setItem("dh_density", v);
       } catch {
-        // ignore storage failures
+        void 0;
       }
     });
   }
@@ -604,7 +603,7 @@ export function initEvents() {
     try {
       localStorage.setItem("dh_browser_page_size", String(v));
     } catch {
-      // ignore storage failures
+      void 0;
     }
     state.browserPage = 0;
     openBrowser(state.browserKind);

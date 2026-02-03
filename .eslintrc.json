@@ -5,8 +5,18 @@
     "es2022": true
   },
   "parserOptions": {
-    "ecmaVersion": 2022,
     "sourceType": "module"
   },
-  "extends": ["eslint:recommended"]
+  "extends": ["eslint:recommended"],
+  "overrides": [
+    {
+      "files": ["tools/**/*.mjs"],
+      "env": {
+        "node": true
+      },
+      "parserOptions": {
+        "sourceType": "module"
+      }
+    }
+  ]
 }
